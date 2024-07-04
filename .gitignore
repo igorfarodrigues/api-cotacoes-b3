@@ -19,3 +19,5 @@
 
 # Go workspace file
 go.sum
+
+b3-downloads/*
