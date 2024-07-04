@@ -1,33 +1,44 @@
 package api
 
 import (
-    "github.com/igorfarodrigues/api-cotacoes-b3/service"
-    "encoding/json"
-    "net/http"
+	"encoding/json"
+	"github.com/go-chi/chi/v5"
+	"github.com/igorfarodrigues/api-cotacoes-b3/service"
+	"log"
+	"net/http"
+	"regexp"
 )
 
-type Handler struct {
-    TradeService *service.TradeService
-}
+func GetTradeData(w http.ResponseWriter, r *http.Request) {
+	ticker := chi.URLParam(r, "ticker")
+	date := chi.URLParam(r, "date")
 
-func NewHandler(service *service.TradeService) *Handler {
-    return &Handler{TradeService: service}
-}
+	if ticker == "" {
+		log.Printf("Ticker não pode ser vazio")
+		http.Error(w, "Ticker não pode ser vazio", http.StatusBadRequest)
+		return
+	}
 
-func (handler *Handler) GetTradeData(w http.ResponseWriter, r *http.Request) {
-    ticker := r.URL.Query().Get("ticker")
-    date := r.URL.Query().Get("date")
+	match, err := regexp.MatchString(`^\d{4}-\d{2}-\d{2}$`, date)
+	if err != nil {
+		log.Printf("Erro ao validar data: %v", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
-    if ticker == "" {
-        http.Error(w, "Ticker is required", http.StatusBadRequest)
-        return
-    }
+	if !match {
+		log.Printf("Formato de data inválido: %s", date)
+		http.Error(w, "Formato de data inválido, use YYYY-MM-DD", http.StatusBadRequest)
+		return
+	}
 
-    data, err := handler.TradeService.GetTradeData(ticker, date)
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+	data, err := service.GetTradeData(ticker, date)
+	if err != nil {
+		log.Printf("Erro ao buscar cotações: %v", err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
 
-    json.NewEncoder(w).Encode(data)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
 }

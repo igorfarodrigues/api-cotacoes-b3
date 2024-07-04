@@ -5,12 +5,17 @@ import "github.com/spf13/viper"
 var cfg *config
 
 type config struct {
-	API APIConfig
-	DB  DBConfig
+	API    APIConfig
+	DB     DBConfig
+	FOLDER AddConfigPath
 }
 
 type APIConfig struct {
 	Port string
+}
+
+type AddConfigPath struct {
+	Path string
 }
 
 type DBConfig struct {
@@ -43,6 +48,10 @@ func Load() error {
 		Port: viper.GetString("api.port"),
 	}
 
+	cfg.FOLDER = AddConfigPath{
+		Path: viper.GetString("folder.path"),
+	}
+
 	cfg.DB = DBConfig{
 		Host:     viper.GetString("database.host"),
 		Port:     viper.GetString("database.port"),
@@ -60,4 +69,8 @@ func GetDB() DBConfig {
 
 func GetServerPort() string {
 	return cfg.API.Port
+}
+
+func GetFolderPath() string {
+	return cfg.FOLDER.Path
 }

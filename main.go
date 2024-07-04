@@ -1,26 +1,38 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 	"github.com/igorfarodrigues/api-cotacoes-b3/api"
-	"github.com/igorfarodrigues/api-cotacoes-b3/repository"
+	"github.com/igorfarodrigues/api-cotacoes-b3/configs"
 	"github.com/igorfarodrigues/api-cotacoes-b3/service"
-	_ "github.com/lib/pq"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	db, err := sql.Open("postgres", "user=youruser password=yourpassword dbname=yourdb sslmode=disable")
+	err := configs.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tradeRepo := repository.NewTradeRepository(db)
-	tradeService := service.NewTradeService(tradeRepo)
-	handler := api.NewHandler(tradeService)
+	// Log the loaded configuration
+	log.Printf("Loaded configuration: %+v", configs.GetDB())
 
-	http.HandleFunc("/trades", handler.GetTradeData)
-	log.Println("Server is running on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Carregar e salvar dados dos arquivos
+	if err := service.LoadAndSaveTrades(configs.GetFolderPath()); err != nil {
+		log.Fatal(err)
+	}
+
+	r := chi.NewRouter()
+	r.Get("/trades{ticker}{date}", api.GetTradeData)
+
+	port := configs.GetServerPort()
+	log.Printf("Server starting on port %s", port)
+	err = http.ListenAndServe(fmt.Sprintf(":%s", port), r)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
