@@ -7,6 +7,6 @@ path = "b3-downloads"
 [database]
 host = "localhost"
 port = "5432"
-user = "user_trade"
-pass = "1122"
+user = "postgres"
+pass = "1234"
 name = "api_cotacao"

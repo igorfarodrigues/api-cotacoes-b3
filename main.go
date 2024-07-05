@@ -24,6 +24,7 @@ func main() {
 	if err := service.LoadAndSaveTrades(configs.GetFolderPath()); err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Loading files - success!!!")
 
 	r := chi.NewRouter()
 	r.Get("/trades{ticker}{date}", api.GetTradeData)

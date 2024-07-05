@@ -21,6 +21,12 @@ func ReadTradesFromFile(filepath string) ([]*models.Trade, error) {
 	reader.Comma = ';'
 	reader.TrimLeadingSpace = true
 
+	// Ignorar o cabeçalho
+	_, err = reader.Read()
+	if err != nil {
+		return nil, err
+	}
+
 	var trades []*models.Trade
 	for {
 		record, err := reader.Read()
@@ -28,10 +34,12 @@ func ReadTradesFromFile(filepath string) ([]*models.Trade, error) {
 			break
 		}
 		if err != nil {
-			return nil, err
+			log.Printf("Erro ao ler o registro no arquivo %s: %v", filepath, err)
+			continue
 		}
 
 		if len(record) < 10 {
+			log.Printf("Registro incompleto no arquivo %s: %v", filepath, record)
 			continue // Pula registros incompletos
 		}
 

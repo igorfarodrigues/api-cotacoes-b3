@@ -1,10 +1,13 @@
 package service
 
 import (
-	"github.com/igorfarodrigues/api-cotacoes-b3/repository"
-	"github.com/igorfarodrigues/api-cotacoes-b3/utils"
+	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/igorfarodrigues/api-cotacoes-b3/models"
+	"github.com/igorfarodrigues/api-cotacoes-b3/repository"
+	"github.com/igorfarodrigues/api-cotacoes-b3/utils"
 )
 
 func GetTradeData(ticker string, date string) (map[string]interface{}, error) {
@@ -27,22 +30,41 @@ func GetTradeData(ticker string, date string) (map[string]interface{}, error) {
 }
 
 func LoadAndSaveTrades(directory string) error {
-	err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
+	return filepath.Walk(directory, processFile)
+}
+
+func processFile(path string, info os.FileInfo, err error) error {
+	if err != nil {
+		return err
+	}
+	if !info.IsDir() {
+		if err := processTradesFromFile(path); err != nil {
+			log.Printf("Erro ao processar arquivo %s: %v", path, err)
 			return err
 		}
-		if !info.IsDir() {
-			trades, err := utils.ReadTradesFromFile(path)
-			if err != nil {
-				return err
-			}
-			for _, trade := range trades {
-				if _, err := repository.SaveTrade(trade); err != nil {
-					return err
-				}
-			}
+	}
+	return nil
+}
+
+func processTradesFromFile(filePath string) error {
+	trades, err := utils.ReadTradesFromFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	for _, trade := range trades {
+		if err := saveTrade(trade); err != nil {
+			return err
 		}
-		return nil
-	})
-	return err
+	}
+
+	return nil
+}
+
+func saveTrade(trade *models.Trade) error {
+	if _, err := repository.SaveTrade(trade); err != nil {
+		log.Printf("Erro ao salvar cotação: %v", err)
+		return err
+	}
+	return nil
 }
