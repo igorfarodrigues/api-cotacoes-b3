@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
 	"github.com/igorfarodrigues/api-cotacoes-b3/service"
 	"log"
 	"net/http"
@@ -10,8 +9,8 @@ import (
 )
 
 func GetTradeData(w http.ResponseWriter, r *http.Request) {
-	ticker := chi.URLParam(r, "ticker")
-	date := chi.URLParam(r, "date")
+	ticker := r.URL.Query().Get("ticker")
+	date := r.URL.Query().Get("date")
 
 	if ticker == "" {
 		log.Printf("Ticker não pode ser vazio")
