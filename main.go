@@ -12,6 +12,8 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
+var jobs = make(chan string, 1000)
+
 func main() {
 	err := configs.Load()
 	if err != nil {
@@ -21,11 +23,8 @@ func main() {
 	// Log the loaded configuration
 	log.Printf("Loaded configuration: %+v", configs.GetDB())
 
-	// Carregar e salvar dados dos arquivos
-	if err := service.LoadAndSaveTrades(configs.GetFolderPath()); err != nil {
-		log.Fatal(err)
-	}
-	log.Println("Loading files - success!!!")
+	go worker() // Inicia o worker para processar os arquivos
+	jobs <- configs.GetFolderPath()
 
 	r := chi.NewRouter()
 	r.Get("/trades", api.GetTradeData)
@@ -37,4 +36,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+}
+
+func worker() {
+	for path := range jobs {
+		// Carregar e salvar dados dos arquivos
+		if err := service.LoadAndSaveTrades(path); err != nil {
+			log.Fatal(err)
+		} else {
+			log.Printf("Arquivo %s processado com sucesso", path)
+		}
+	}
 }
