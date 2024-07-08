@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/igorfarodrigues/api-cotacoes-b3/service"
+	"github.com/igorfarodrigues/api-cotacoes-b3/api/service"
 	"log"
 	"net/http"
 	"regexp"
