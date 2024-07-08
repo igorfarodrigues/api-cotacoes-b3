@@ -59,8 +59,18 @@ Criar uma solução para processar uma grande quantidade de dados de negociaçõ
     ```
 
 2. Construa e inicie os containers:
-    ```sh
-    docker-compose up --build
+    ```bash
+    docker compose build && docker compose up -d
+    ```
+
+3. Execute ´main.go´:
+    ```bash
+    go run ./loadFiles/main.go
+    ```
+e
+
+    ```bash
+     go run ./api/main.go
     ```
 
 ## Arquivos
@@ -93,12 +103,12 @@ Instruções para a construção da imagem Docker da aplicação.
 
 - Para parar os containers:
     ```sh
-    docker-compose down
+    docker compose down
     ```
 
 - Para reconstruir os containers:
     ```sh
-    docker-compose up --build
+    docker compose up --build
     ```
 
 ## Contribuições
