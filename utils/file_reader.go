@@ -28,30 +28,36 @@ func ReadTradesFromFile(filepath string) ([]*models.Trade, error) {
 	}
 
 	var trades []*models.Trade
+	lineNumber := 1 // Para contagem de linhas
 	for {
 		record, err := reader.Read()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			log.Printf("Erro ao ler o registro no arquivo %s: %v", filepath, err)
+			log.Printf("Erro ao ler o registro no arquivo %s na linha %d: %v", filepath, lineNumber, err)
 			continue
 		}
 
+		log.Printf("Registro lido na linha %d: %v", lineNumber, record) // Adiciona log para o registro lido
+
 		if len(record) < 10 {
-			log.Printf("Registro incompleto no arquivo %s: %v", filepath, record)
-			continue // Pula registros incompletos
+			log.Printf("Registro incompleto no arquivo %s na linha %d: %v", filepath, lineNumber, record)
+			lineNumber++ // Incrementa o número da linha
+			continue     // Pula registros incompletos
 		}
 
 		precoNegocio, err := strconv.ParseFloat(strings.Replace(record[3], ",", ".", 1), 64)
 		if err != nil {
-			log.Printf("Erro ao parsear PrecoNegocio no arquivo %s: %v", filepath, err)
+			log.Printf("Erro ao parsear PrecoNegocio no arquivo %s na linha %d: %v", filepath, lineNumber, err)
+			lineNumber++ // Incrementa o número da linha
 			continue
 		}
 
 		qtdNegociada, err := strconv.Atoi(record[4])
 		if err != nil {
-			log.Printf("Erro ao parsear QuantidadeNegociada no arquivo %s: %v", filepath, err)
+			log.Printf("Erro ao parsear QuantidadeNegociada no arquivo %s na linha %d: %v", filepath, lineNumber, err)
+			lineNumber++ // Incrementa o número da linha
 			continue
 		}
 
@@ -63,6 +69,7 @@ func ReadTradesFromFile(filepath string) ([]*models.Trade, error) {
 			QuantidadeNegociada: qtdNegociada,
 		}
 		trades = append(trades, trade)
+		lineNumber++ // Incrementa o número da linha
 	}
 	return trades, nil
 }

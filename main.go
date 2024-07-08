@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
+
 	"github.com/igorfarodrigues/api-cotacoes-b3/api"
 	"github.com/igorfarodrigues/api-cotacoes-b3/configs"
 	"github.com/igorfarodrigues/api-cotacoes-b3/service"
-	"log"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -27,7 +28,7 @@ func main() {
 	log.Println("Loading files - success!!!")
 
 	r := chi.NewRouter()
-	r.Get("/trades{ticker}{date}", api.GetTradeData)
+	r.Get("/trades", api.GetTradeData)
 
 	port := configs.GetServerPort()
 	log.Printf("Server starting on port %s", port)
