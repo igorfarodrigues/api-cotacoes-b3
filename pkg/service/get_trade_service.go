@@ -1,8 +1,6 @@
 package service
 
-import (
-	"github.com/igorfarodrigues/api-cotacoes-b3/api/repository"
-)
+import "github.com/igorfarodrigues/api-cotacoes-b3/pkg/repository"
 
 func GetTradeData(ticker string, date string) (map[string]interface{}, error) {
 	maxRangeValue, err := repository.GetMaxRangeValue(ticker, date)

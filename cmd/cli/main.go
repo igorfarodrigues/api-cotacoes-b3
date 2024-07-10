@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/igorfarodrigues/api-cotacoes-b3/configs"
-	"github.com/igorfarodrigues/api-cotacoes-b3/loadFiles/service"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/service"
 )
 
 var jobs = make(chan string, 100)

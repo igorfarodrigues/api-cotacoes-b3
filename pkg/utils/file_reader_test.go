@@ -1,8 +1,7 @@
-package tests
+package utils
 
 import (
-	"github.com/igorfarodrigues/api-cotacoes-b3/models"
-	"github.com/igorfarodrigues/api-cotacoes-b3/utils"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/models"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -24,7 +23,7 @@ func TestReadTradesFromFile(t *testing.T) {
 	err = tmpfile.Close()
 	assert.NoError(t, err)
 
-	trades, err := utils.ReadTradesFromFile(tmpfile.Name())
+	trades, err := ReadTradesFromFile(tmpfile.Name())
 	assert.NoError(t, err)
 	assert.Len(t, trades, 2)
 

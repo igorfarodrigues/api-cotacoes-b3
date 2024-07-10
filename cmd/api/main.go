@@ -5,8 +5,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/igorfarodrigues/api-cotacoes-b3/api/controller"
 	"github.com/igorfarodrigues/api-cotacoes-b3/configs"
+	"github.com/igorfarodrigues/api-cotacoes-b3/internal"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -21,7 +21,7 @@ func main() {
 	log.Printf("Loaded configuration: %+v", configs.GetDB())
 
 	r := chi.NewRouter()
-	r.Get("/trades", api.GetTradeData)
+	r.Get("/trades", internal.GetTradeData)
 
 	port := configs.GetServerPort()
 	log.Printf("Server starting on port %s", port)

@@ -1,11 +1,12 @@
-package api
+package internal
 
 import (
 	"encoding/json"
-	"github.com/igorfarodrigues/api-cotacoes-b3/api/service"
 	"log"
 	"net/http"
 	"regexp"
+
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/service"
 )
 
 func GetTradeData(w http.ResponseWriter, r *http.Request) {

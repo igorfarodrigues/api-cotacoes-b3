@@ -2,7 +2,7 @@ package utils
 
 import (
 	"encoding/csv"
-	"github.com/igorfarodrigues/api-cotacoes-b3/models"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/models"
 	"io"
 	"log"
 	"os"

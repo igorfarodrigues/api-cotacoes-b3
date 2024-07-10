@@ -5,9 +5,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/igorfarodrigues/api-cotacoes-b3/loadFiles/repository"
-	"github.com/igorfarodrigues/api-cotacoes-b3/models"
-	"github.com/igorfarodrigues/api-cotacoes-b3/utils"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/models"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/repository"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/utils"
 )
 
 func LoadAndSaveTrades(directory string) error {

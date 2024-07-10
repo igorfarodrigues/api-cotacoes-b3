@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/igorfarodrigues/api-cotacoes-b3/db"
+	"github.com/igorfarodrigues/api-cotacoes-b3/pkg/db"
 	_ "github.com/lib/pq"
 )
 
