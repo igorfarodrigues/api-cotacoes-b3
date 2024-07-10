@@ -65,9 +65,9 @@ Criar uma solução para processar uma grande quantidade de dados de negociaçõ
 
 3. Execute ´main.go´:
     ```bash
-    go run ./loadFiles/main.go
+    go run ./cmd/cli/main.go
     
-    go run ./api/main.go
+    go run ./cmd/api/main.go
     ```
 
 ## Arquivos
